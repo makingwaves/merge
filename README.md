@@ -4,7 +4,8 @@ Merge eZ Publish extension
 Introduction
 --------------------------
 
-Will let you merge two different content objects which you wish where the same object.
+Will let you merge two different content objects which you wish where the same object. Used to
+restructure and maintain your content tree.
 
 
 Merge two content objects
@@ -16,7 +17,7 @@ you will end up with after the merge. You can also choose which content to keep 
 different existing translations in the two objects. When ready, click button to do the merging.
 
 
-Support
+Supported features
 --------------------------
 
 Merge will copy selected content translations from the different attributes to the master
@@ -46,9 +47,9 @@ Contributors
 --------------------------
 
 Written by Arne Bakkebø, [Making Waves](http://www.makingwaves.no/), on behalf of
-[Norwegian Seafood Concil](http://seafood.no/), who required it to restructure their content.
+[Norwegian Seafood Council](http://seafood.no/), who required it to restructure their content.
 
-[Norwegian Seafood Concil](http://seafood.no/) have the following eZ Publish sites around the globe:
+[Norwegian Seafood Council](http://seafood.no/) have the following eZ Publish sites around the globe:
 * [Norway](http://godfisk.no/)
 * [Sweden](http://norskfisk.se/)
 * [USA](http://salmonfromnorway.com/)
