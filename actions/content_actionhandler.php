@@ -140,7 +140,6 @@ function merge_ContentActionHandler( &$module, &$http, &$objectID )
             else
                 $object1 = $mobject1;
 
-            $object2 = null;
             if ( $node2 )
             {
                 $object2 = $node2->attribute( 'object' );
@@ -151,7 +150,25 @@ function merge_ContentActionHandler( &$module, &$http, &$objectID )
             // Copy language in specified direction, if it exist in both objects
             $use_object1_values = ( $node_id == $selected_array[0] );
             if ( $object1 AND $object2 )
-                doContentObjectMerge( $object1, $object2, $language, $use_object1_values );
+            {
+                // Need to redirect node 2 current url alias to avoid added "2" in the new url alias of merged object
+                $urlalias_array = eZURLAliasML::fetchByPath( $node2->attribute( 'url_alias' ) );
+                foreach ( $urlalias_array as $urlalias )
+                {
+                    $urlalias = eZURLAliasML::fetchObject(
+                        eZURLAliasML::definition(),
+                        null,
+                        array(
+                            'id' => $urlalias->attribute( 'id' ),
+                            'lang_mask' => $urlalias->attribute( 'lang_mask' )
+                        )
+                    );
+                    $urlalias->setAttribute( 'action', 'eznode:' . $mnode1->attribute( 'node_id' ) );
+                    $urlalias->store();
+                }
+
+                doContentObjectMerge($object1, $object2, $language, $use_object1_values);
+            }
         }
 
         $main_node_id1 = $mobject1->attribute( 'main_node_id' );
@@ -163,16 +180,6 @@ function merge_ContentActionHandler( &$module, &$http, &$objectID )
             {
                 eZContentObjectTreeNodeOperations::move( $child2->attribute( 'node_id' ), $main_node_id1 );
             }
-
-            // Tentative solution to add a history url redirect from object2 nodes to the object1 main node.
-            // Uncertain if this is the correct way to do this.
-/*            $urlalias_list = eZURLAliasML::fetchByAction( 'eznode', $node2->attribute( 'node_id' ) );
-            foreach ( $urlalias_list as $url_alias )
-            {
-                $url_alias->setAttribute( 'action', 'eznode:' . $main_node_id1 );
-                $url_alias->setAttribute( 'is_original', 0 );
-                $url_alias->store();
-            }*/
         }
 
         // Delete object2
