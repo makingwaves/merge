@@ -118,6 +118,8 @@ function merge_ContentActionHandler( &$module, &$http, &$objectID )
             $module->redirectTo( '/merge/select' );
         }
 
+        // Make sure merge process does not get a PHP timeout
+        set_time_limit( 0 );
         $db = eZDB::instance();
         $db->begin();
         foreach ( $translation_map as $language => $node_id )
@@ -200,7 +202,7 @@ function merge_ContentActionHandler( &$module, &$http, &$objectID )
 function doContentObjectMerge( $object1, $object2, $language, $use_object1_values )
 {
     // Merging objects based on selected translations
-    $new_version = mergeObject2ToObject1( $object1, $object2, $language, $use_object1_values );
+    mergeObject2ToObject1( $object1, $object2, $language, $use_object1_values );
 
     // Update reverse related objects with new object relation
     updateReverseRelatedObjects( $object2, $object1 );
@@ -277,11 +279,22 @@ function updateReverseRelatedObjects( $related_object, $new_related_object )
         {
             // To get the different languages of the related object, we need to go through a node fetch
             $main_node_id = $reverse_related_object->attribute( 'main_node_id' );
+            if ( empty( $main_node_id ) )
+            {
+                eZDebug::writeError( "No node found on object with id '" . $reverse_related_object->attribute( 'id' ) . "'. Object probably in trash ($related_object_id -> $new_related_object_id)", 'merge_ContentActionHandler::updateReverseRelatedObjects' );
+                continue;
+            }
             $language_list = $reverse_related_object->attribute( 'available_languages' );
             foreach ( $language_list as $language )
             {
                 $tmp_node = eZFunctionHandler::execute( 'content', 'node', array( 'node_id' => $main_node_id,
                                                                             'language_code' => $language ) );
+                if ( !$tmp_node )
+                {
+                    eZDebug::writeError( "Could not read node with id '$main_node_id' and language '$language' ($related_object_id -> $new_related_object_id)", 'merge_ContentActionHandler::updateReverseRelatedObjects' );
+                    continue;
+                }
+
                 $reverse_related_object = $tmp_node->attribute( 'object' );
                 $new_version = $reverse_related_object->createNewVersionIn( $language );
                 $new_version->setAttribute( 'modified', time() );
