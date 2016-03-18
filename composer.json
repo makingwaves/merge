@@ -1,13 +1,9 @@
 {
-    "name": "informaticatrentina/merge",
+    "name": "makingwaves/merge",
     "version": "1.0",
-    "description": "Informatica Trentina SpA - merge",
+    "description": "Making Waves - merge",
     "type": "ezpublish-legacy-extension",
     "authors": [
-        {
-            "name": "Informatica Trentina SpA",
-            "homepage": "http://www.infotn.it"
-        },
         {
             "name": "makingwaves",
             "homepage": "http://www.makingwaves.no/"
