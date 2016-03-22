@@ -1,0 +1,19 @@
+{
+    "name": "makingwaves/merge-ls",
+    "description": "Merge two different content objects",
+    "type": "ezpublish-legacy-extension",
+    "authors": [        
+        {
+            "name": "Making Waves",
+            "homepage": "http://www.makingwaves.no/"
+        }
+    ],
+    "license": "GPL-2.0",    
+    "minimum-stability": "dev",
+    "require": {
+        "ezsystems/ezpublish-legacy-installer": "*"
+    },
+    "extra": {
+        "ezpublish-legacy-extension-name": "merge"
+    }
+}
